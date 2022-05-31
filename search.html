@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lesson06 search</title>
+</head>
+
+<body>
+    {{content}}
+</body>
+
+<script type="text/javascript">
+    const inpSearch = document.getElementById('inpSearch');
+    const btnSearch = document.getElementById('btnSearch');
+    if (btnSearch)
+        btnSearch.onclick = () => {
+            console.log('search click ' + inpSearch.value);
+            console.log(document.location.href);
+            console.log(document.location.search);
+            let newPath = '';
+            if (inpSearch.value === '')
+                newPath = document.location.href;
+            else
+                if (document.location.search !== '')
+                    newPath = newPath.replace(document.location.search, '?searchStr=' + inpSearch.value);
+                else
+                    newPath = document.location.href + '?searchStr=' + inpSearch.value;
+            console.log(newPath);
+
+            const request = new XMLHttpRequest();
+            request.open('GET', newPath, true);
+            request.send(null);
+        }
+
+</script>
+
+</html>
