@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Lesson06 chat</title>
+
+    <script src="https://cdn.socket.io/3.1.1/socket.io.min.js"
+        integrity="sha384-gDaozqUvc4HTgo8iZjwth73C6dDDeOJsAgpxBcMpZYztUfjHXpzrpdrHRdVp8ySO"
+        crossorigin="anonymous"></script>
+</head>
+
+<body>
+    <div>
+        Имя пользователя: <span id="userName"></span>
+        <br>
+        Количество подключений к серверу: <span id="userCount"></span>
+        <br>
+    </div>
+    <input type="text" id="input" autofocus>
+    <input type="submit" id="send" value="Send">
+    <div id="messages"></div>
+</body>
+
+<script type="text/javascript">
+    const socket = io('localhost:3000');
+
+    const input = document.getElementById('input');
+    const messages = document.getElementById('messages');
+    const userCount = document.getElementById('userCount');
+
+    let userName = '';
+
+    const addMessage = (message) => {
+        const messageSpan = document.createElement('span').innerHTML = message;
+        messages.append(messageSpan);
+        messages.append(document.createElement('br'));
+    };
+
+    const showUserCount = (count) => userCount.innerText = count;
+
+    socket.on('yourConnection', (data) => {
+        userName = data.userName;
+        document.getElementById('userName').innerText = userName;
+        showUserCount(data.userCount);
+    });
+
+    socket.on('newConnection', data => {
+        addMessage(`${data.userName}: connect`);
+
+        showUserCount(userCount.innerText = data.userCount);
+    });
+
+    socket.on('newMessage', (data) => {
+        addMessage(`${data.userName}: ${data.message}`);
+
+        if (data.userName === userName)
+            input.value = '';
+    });
+
+    socket.on('newDisconnection', data => {
+        addMessage(`${data.userName}: disconnect`);
+
+        showUserCount(data.userCount);
+    });
+
+    document.getElementById('send').onclick = () => {
+        socket.emit('newMessage', { userName: userName, message: input.value });
+    };
+
+</script>
+
+</html>
