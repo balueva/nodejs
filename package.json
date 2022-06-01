@@ -13,8 +13,10 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@faker-js/faker": "^7.1.0",
     "colors": "^1.4.0",
     "inquirer": "^8.2.4",
+    "socket.io": "^4.5.1",
     "yargs": "^17.5.1"
   }
 }
